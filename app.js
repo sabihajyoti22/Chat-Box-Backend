@@ -9,10 +9,10 @@ app.use(cors())
 
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+  // cors: {
+  //   origin: "https://chat-box-app-2022.netlify.app/",
+  //   methods: ["GET", "POST"]
+  // }
 })
 // Home Route
 app.use("/", (req, res) => {
