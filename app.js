@@ -7,18 +7,20 @@ const app = express()
 // CORS
 app.use(cors())
 
-const server = http.createServer(app)
-const io = new Server(server, {
-  // cors: {
-  //   origin: "https://chat-box-app-2022.netlify.app/",
-  //   methods: ["GET", "POST"]
-  // }
-})
 // Home Route
 app.use("/", (req, res) => {
   res.statusCode = 200
   res.send("<h1>Home Route</h1>")
 })
+
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+})
+
 
 io.on("connection", (socket) => {
   console.log(socket.id)
