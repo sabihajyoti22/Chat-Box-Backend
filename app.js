@@ -1,6 +1,6 @@
 const express = require("express")
 const { Server } = require("socket.io")
-const http = require("http")
+const http = require("https")
 const cors = require("cors")
 const app = express()
 
@@ -19,11 +19,11 @@ const io = new Server(server, {
     origin: "*",
     methods: ["GET", "POST"]
   }
-})
+}
+)
 
 
 io.on("connection", (socket) => {
-  console.log(socket.id)
   socket.on("chatRoom", chatRoom => {
     socket.join(chatRoom)
   })
