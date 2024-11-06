@@ -1,9 +1,12 @@
 const express = require("express")
 const { Server } = require("socket.io")
 const http = require("http")
+const https = require("https")
+const { readFileSync } = require("fs");
 const cors = require("cors")
 const app = express()
 const config = require("./Config/config")
+const path = require("path")
 
 // CORS
 app.use(cors())
@@ -15,16 +18,18 @@ app.use("/", (req, res) => {
 })
 
 const server = http.createServer(app)
-const io = new Server(server, {
+const httpsServer = https.createServer({
+  key: readFileSync(path.join(__dirname, 'Certificate', 'key.pem')),
+  cert: readFileSync(path.join(__dirname, 'Certificate', 'cert.pem'))
+})
+
+const io = new Server(httpsServer, {
     cors: {
       origin: config.app.client,
       methods: ["GET", "POST"]
-    },
-    transports: ['websocket'],
-    credentials: true
+    }
   }
 )
-
 
 io.on("connection", (socket) => {
   console.log(socket.id)
@@ -37,4 +42,4 @@ io.on("connection", (socket) => {
   })
 });
 
-module.exports = server
+module.exports = httpsServer
