@@ -3,6 +3,7 @@ const { Server } = require("socket.io")
 const http = require("http")
 const cors = require("cors")
 const app = express()
+const config = require("./Config/config")
 
 // CORS
 app.use(cors())
@@ -15,15 +16,16 @@ app.use("/", (req, res) => {
 
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    cors: {
+      origin: config.app.client,
+      methods: ["GET", "POST"]
+    }
   }
-}
 )
 
 
 io.on("connection", (socket) => {
+  console.log(socket.id)
   socket.on("chatRoom", chatRoom => {
     socket.join(chatRoom)
   })
@@ -31,7 +33,6 @@ io.on("connection", (socket) => {
   socket.on("newMessages", ({newMessages, chatRoom}) => {
     io.in(chatRoom).emit("getLatestMessage", newMessages)
   })
-
 });
 
 module.exports = server
